@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRPRO QR Code Generator</title>
+    <title>SRPRO Generator V2</title>
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for icons -->
@@ -103,8 +103,6 @@
         <div id="qr-section" class="text-center hidden">
             <h2 class="text-xl font-bold mb-4">Tu código QR</h2>
             <canvas id="qr-canvas" class="mx-auto mb-4"></canvas>
-            <!--<button id="save-qr" class="py-2 px-4 rounded-lg mt-4">Guardar QR</button> -->
-           <!-- <button id="print-qr" class="py-2 px-4 rounded-lg mt-4">Imprimir QR</button> -->
         </div>
     </div>
 
@@ -157,9 +155,9 @@
                 storageRef.put(file).then(function(snapshot) {
                     return snapshot.ref.getDownloadURL();
                 }).then(function(downloadURL) {
-                    pdfURL = downloadURL;
+                    pdfURL = downloadURL + "#view=fitH";
                     uploadedFileName.textContent = file.name;
-                    pdfViewer.src = downloadURL;
+                    pdfViewer.src = pdfURL; // Display the PDF in iframe
                     loadingIndicator.classList.add('hidden'); // Hide loading indicator
                 }).catch(function(error) {
                     console.error("Error uploading file:", error);
@@ -209,30 +207,13 @@
 
             // Draw the Hisense logo in the center (optional)
             const ctx = qrCanvas.getContext('2d');
-            const logo = new Image();
-            logo.src = 'https://placehold.co/50x50?text=Hisense';  // Placeholder logo
-            logo.onload = function() {
-                const logoSize = 50;
-                ctx.drawImage(logo, (qrSize - logoSize) / 2, (qrSize - logoSize) / 2, logoSize, logoSize);
-            };
+        const logo = new Image();
+        logo.src = 'https://placehold.co/30x30?text=Hisense';  // Placeholder logo de 30x30px
+        logo.onload = function() {
+            const logoSize = 30;  // Tamaño del logo reducido para no cubrir mucho espacio
+            ctx.drawImage(logo, (qrSize - logoSize) / 2, (qrSize - logoSize) / 2, logoSize, logoSize);
+        };
         }
-
-        /* // Save QR Code
-        document.getElementById('save-qr').addEventListener('click', function() {
-            const canvas = document.getElementById('qr-canvas');
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL();
-            link.download = 'qr-code.png';
-            link.click();
-        });
-
-        // Print QR Code
-        document.getElementById('print-qr').addEventListener('click', function() {
-            const canvas = document.getElementById('qr-canvas');
-            const win = window.open();
-            win.document.write('<img src="' + canvas.toDataURL() + '" onload="window.print();window.close()">');
-            win.focus();
-        }); */
     </script>
 </body>
 </html>
